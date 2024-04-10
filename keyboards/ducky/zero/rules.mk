@@ -1,1 +1,1 @@
-DEFAULT_FOLDER = ducky/zero/DK2108SZ
+DEFAULT_FOLDER = ducky/zero/dk2108sz
