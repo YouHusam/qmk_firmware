@@ -39,7 +39,7 @@
 #define NUC123_LSEDRV                (3U << 3U)
 
 #if !defined(NUC123_HSECLK)
-#define NUC123_HSECLK                12000000U
+#define NUC123_HSECLK                NUC123_HSECLK_MAX
 #endif
 
 //#define NUC123_HSE_BYPASS

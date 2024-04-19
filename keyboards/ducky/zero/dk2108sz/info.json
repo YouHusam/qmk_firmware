@@ -6,15 +6,15 @@
         "vid": "0xFEED",
         "pid": "0x1086",
         "device_version": "1.0.0",
-        "force_nkro": false
+        "force_nkro": true
     },
     "matrix_pins": {
         "cols": ["B7", "B6", "D5", "B13", "B12", "D9", "D10", "D11", "D4", "B8", "B4", "C2", "B15", "B5", "C1", "B3", "C13", "C11"],
         "rows": ["C3", "C12", "C4", "D8", "C10", "D3", "D2", "C5"]
     },
-    "diode_direction": "COL2ROW",
+    "diode_direction": "ROW2COL",
     "layouts": {
-        "LAYOUT_fullsize_extended_ansi": {
+        "LAYOUT": {
             "layout": [
                 {"label": "Esc", "matrix": [0, 0], "x":0, "y":0},
                 {"label": "F1", "matrix": [0, 2],"x":2, "y":0},
