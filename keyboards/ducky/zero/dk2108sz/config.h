@@ -18,7 +18,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #define GPIO_INPUT_PIN_DELAY (NUC123_HCLK / 6 / 1000000L)
-
-// #define BACKLIGHT_PIN  A13
-// #define BACKLIGHT_PINS { D0 }
-// #define BACKLIGHT_ON_STATE 1
