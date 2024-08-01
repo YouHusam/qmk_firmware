@@ -1,3 +1,5 @@
+#include QMK_KEYBOARD_H
+
 #include <display/logo.c>
 
 uint32_t timer = 0;
@@ -7,15 +9,19 @@ bool logo_cleared = false;
 void render_lock_status(void) {
     led_t led_state = host_keyboard_led_state();
 
-    oled_set_cursor(oled_max_chars() - 5, 0);
-    oled_write_P(PSTR(led_state.num_lock ? " NUM " : "     "), led_state.num_lock);
+    oled_set_cursor(0, 0);
+    oled_write_P(PSTR("Num:"), false);
+    oled_write_P(PSTR(led_state.num_lock ? " On " : " Off"), led_state.num_lock);
 
-    oled_set_cursor(oled_max_chars() - 10, 0);
-    oled_write_P(PSTR(led_state.caps_lock ? " CAPS " : "     "), led_state.caps_lock);
+    oled_set_cursor(oled_max_chars() - 9, 0);
+    oled_write_P(PSTR("Caps:"), false);
+    oled_write_P(PSTR(led_state.caps_lock ? " On " : " Off"), led_state.caps_lock);
 }
 
 void render_layer(void) {
-    oled_set_cursor(0, 0);
+    oled_set_cursor(0, 1);
+    oled_write_P(PSTR("Layer: "), false);
+
     switch (get_highest_layer(layer_state)) {
         case 0:
             oled_write_P(PSTR("Numpad  "), false);
@@ -45,9 +51,9 @@ bool oled_task_user(void) {
         logo_cleared = true;
     }
 
-    render_layer();
     render_lock_status();
-    oled_set_cursor(0, 1);
+    render_layer();
+    oled_set_cursor(0, 2);
 
     return true;
 }
