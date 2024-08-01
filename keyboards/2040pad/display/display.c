@@ -33,7 +33,7 @@ void render_layer(void) {
 }
 
 
-bool oled_task_user(void) {
+bool oled_task_user_custom(void) {
     if (timer_elapsed(timer) < 1000) {
         return false;
     }
