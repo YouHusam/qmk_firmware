@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 
-#include <display/logo.c>
+#include "logo.c"
+#include "helpers.c"
 
 uint32_t timer = 0;
 bool logo_cleared = false;
@@ -20,11 +21,11 @@ void render_lock_status(void) {
 
 void render_layer(void) {
     oled_set_cursor(0, 1);
-    oled_write_P(PSTR("Layer: "), false);
+    oled_write_P(PSTR("Layer:"), false);
 
     switch (get_highest_layer(layer_state)) {
         case 0:
-            oled_write_P(PSTR("Numpad  "), false);
+            oled_write_P(PSTR(" Numpad  "), false);
             break;
         case 1:
             oled_write_P(PSTR(" Layer 1"), true);
@@ -34,6 +35,32 @@ void render_layer(void) {
             break;
         case 3:
             oled_write_P(PSTR(" Layer 3"), true);
+            break;
+    }
+}
+
+void render_encoder_mode(void) {
+    oled_set_cursor(0, 2);
+    oled_write_P(PSTR("Enc Mode:"), false);
+
+    switch (enc_mode) {
+        case SCROLL:
+            oled_write_P(PSTR(" Scroll"), true);
+            break;
+        case MOUSE:
+            oled_write_P(PSTR(" Mouse"), true);
+            break;
+        case TEXT:
+            oled_write_P(PSTR(" Text"), true);
+            break;
+        case APPSW:
+            oled_write_P(PSTR(" App Sw"), true);
+            break;
+        case MEDIA:
+            oled_write_P(PSTR(" Media"), true);
+            break;
+        case PONG:
+            oled_write_P(PSTR(" Pong"), true);
             break;
     }
 }
@@ -53,7 +80,7 @@ bool oled_task_user(void) {
 
     render_lock_status();
     render_layer();
-    oled_set_cursor(0, 2);
+    render_encoder_mode();
 
     return true;
 }
