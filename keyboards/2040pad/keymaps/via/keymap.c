@@ -16,34 +16,36 @@
 
 #include QMK_KEYBOARD_H
 
+#include <helpers/helpers.c>
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        LT(1, KC_NUM_LOCK),   LT(2, KC_MUTE),
+        LT(1, LENC),   LT(2, RENC),
         KC_KP_SLASH,   KC_KP_ASTERISK,   KC_KP_MINUS,   KC_KP_PLUS,
         KC_KP_7,   KC_KP_8,   KC_KP_9,   KC_KP_0,
         KC_KP_4,   KC_KP_5,   KC_KP_6,   KC_KP_ENTER,
         KC_KP_1,   KC_KP_2,   KC_KP_3,   KC_KP_DOT
     ),
     [1] = LAYOUT(
-      MO(3),   MO(3),
-      QK_BOOT,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______
+        LT(3, LENC),   LT(3, RENC),
+        QK_BOOT,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______
     ),
     [2] = LAYOUT(
-      MO(3),   MO(3),
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______
+        LT(3, LENC),   LT(3, RENC),
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______
     ),
     [3] = LAYOUT(
-      _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______,
-      _______,   _______,   _______,   _______
+        LENC,   RENC,
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______,
+        _______,   _______,   _______,   _______,
+        QK_CLEAR_EEPROM ,   _______,   _______,   _______
     ),
 };
 
@@ -59,5 +61,25 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 
 
 #ifdef OLED_ENABLE
-#include <display/display.c>
+#include <helpers/display.c>
 #endif
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LT(1, LENC):
+            if (record->event.pressed && record->tap.count == 1) {
+                register_code(KC_NUM_LOCK);
+            } else if (!record->event.pressed && record->tap.count == 1) {
+                unregister_code(KC_NUM_LOCK);
+            }
+            break;
+        case LT(2, RENC):
+            if (record->event.pressed && record->tap.count == 1) {
+                register_code(KC_MUTE);
+            } else if (!record->event.pressed && record->tap.count == 1) {
+                unregister_code(KC_MUTE);
+            }
+            break;
+    }
+    return true;
+}

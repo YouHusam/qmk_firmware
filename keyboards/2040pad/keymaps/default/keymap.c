@@ -59,5 +59,5 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 
 
 #ifdef OLED_ENABLE
-#include <display/display.c>
+#include <helpers/display.c>
 #endif
