@@ -3,9 +3,8 @@
 #include "logo.c"
 #include "helpers.c"
 
-uint32_t timer = 0;
-bool logo_cleared = false;
-
+uint32_t timer        = 0;
+bool     logo_cleared = false;
 
 void render_lock_status(void) {
     led_t led_state = host_keyboard_led_state();
@@ -45,42 +44,75 @@ void render_encoder_mode(void) {
 
     switch (enc_mode) {
         case SCROLL:
-            oled_write_P(PSTR(" Scroll"), true);
+            oled_write_P(PSTR(" Scroll"), false);
             break;
         case MOUSE:
-            oled_write_P(PSTR(" Mouse"), true);
+            oled_write_P(PSTR(" Mouse"), false);
             break;
         case TEXT:
-            oled_write_P(PSTR(" Text"), true);
+            oled_write_P(PSTR(" Text"), false);
             break;
         case APPSW:
-            oled_write_P(PSTR(" App Sw"), true);
+            oled_write_P(PSTR(" App Sw"), false);
             break;
         case MEDIA:
-            oled_write_P(PSTR(" Media"), true);
+            oled_write_P(PSTR(" Media"), false);
             break;
-        case PONG:
-            oled_write_P(PSTR(" Pong"), true);
-            break;
+            // case PONG:
+            // oled_write_P(PSTR(" Pong"), false);
+            // break;
     }
 }
 
+void render_normal_mode(void) {
+    render_lock_status();
+    render_layer();
+    render_encoder_mode();
+}
+
+void render_encoder_select_mode(void) {
+    oled_set_cursor(0, 0);
+    oled_write_P(PSTR("Encoder:"), false);
+    oled_set_cursor(oled_max_chars() - 9, 0);
+    oled_write_P(PSTR("Function:"), false);
+
+    for (int i = 0; i < ENCODER_MODES_COUNT; i++) {
+        oled_set_cursor(0, 2 + i);
+        oled_write_P(PSTR(encoder_mode_names[i]), i == enc_mode);
+    }
+
+    for (int i = 0; i < ENCODER_SELECT; i++) {
+        uint8_t col = oled_max_chars() - strlen(display_mode_names[i]);
+        oled_set_cursor(col, 2 + i);
+        oled_write_P(PSTR(display_mode_names[i]), i == display_mode_selector);
+    }
+}
 
 bool oled_task_user(void) {
+    static uint8_t previous_display_mode = NORMAL;
+
     if (timer_elapsed(timer) < 1000) {
         return false;
     }
 
-    if(!logo_cleared) {
-        oled_clear();
-        oled_render_dirty(true);
+    if (!logo_cleared) {
         oled_clear();
         logo_cleared = true;
     }
 
-    render_lock_status();
-    render_layer();
-    render_encoder_mode();
+    if (previous_display_mode != display_mode) {
+        oled_clear();
+        previous_display_mode = display_mode;
+    }
+
+    switch (display_mode) {
+        case NORMAL:
+            render_normal_mode();
+            break;
+        case ENCODER_SELECT:
+            render_encoder_select_mode();
+            break;
+    }
 
     return true;
 }
