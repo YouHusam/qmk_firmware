@@ -7,3 +7,7 @@
 #define OLED_DISPLAY_128X64
 #define OLED_DISPLAY_WIDTH 128
 #define OLED_DISPLAY_HEIGHT 64
+
+#define OLED_FONT_H "keyboards/2040pad/glcdfont.c"
+#define OLED_FONT_START 0
+#define OLED_FONT_END 223

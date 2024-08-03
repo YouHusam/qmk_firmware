@@ -2,6 +2,7 @@
 
 #include "logo.c"
 #include "helpers.c"
+#include "calculator.c"
 
 uint32_t timer        = 0;
 bool     logo_cleared = false;
@@ -111,6 +112,9 @@ bool oled_task_user(void) {
             break;
         case ENCODER_SELECT:
             render_encoder_select_mode();
+            break;
+        case CALCULATOR:
+            render_calc();
             break;
     }
 

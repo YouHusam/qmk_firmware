@@ -73,6 +73,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     display_mode = NORMAL;
                     return false;
                 }
+                if (display_mode == CALCULATOR) {
+                    process_record_user_calc(keycode, record);
+                    return false;
+                    break;
+                }
                 left_encoder_pressed(record->event.pressed);
                 return false;
             } else if (!record->event.pressed && record->tap.count) {
@@ -82,6 +87,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case LT(2, RENC):
         case RENC:
+            if (display_mode == CALCULATOR) {
+                process_record_user_calc(keycode, record);
+                return false;
+                break;
+            }
             if (record->event.pressed && record->tap.count) {
                 if (display_mode == ENCODER_SELECT) {
                     display_mode = display_mode_selector;
@@ -103,7 +113,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         default:
             if (record->event.pressed) {
-                return display_mode != ENCODER_SELECT;
+                if (display_mode == CALCULATOR) {
+                    process_record_user_calc(keycode, record);
+                    return false;
+                }
+                return (display_mode != ENCODER_SELECT) || (display_mode != CALCULATOR);
             }
     }
     return true;
