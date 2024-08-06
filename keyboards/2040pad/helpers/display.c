@@ -41,28 +41,8 @@ void render_layer(void) {
 
 void render_encoder_mode(void) {
     oled_set_cursor(0, 2);
-    oled_write_P(PSTR("Enc Mode:"), false);
-
-    switch (enc_mode) {
-        case SCROLL:
-            oled_write_P(PSTR(" Scroll"), false);
-            break;
-        case MOUSE:
-            oled_write_P(PSTR(" Mouse"), false);
-            break;
-        case TEXT:
-            oled_write_P(PSTR(" Text"), false);
-            break;
-        case APPSW:
-            oled_write_P(PSTR(" App Sw"), false);
-            break;
-        case MEDIA:
-            oled_write_P(PSTR(" Media"), false);
-            break;
-            // case PONG:
-            // oled_write_P(PSTR(" Pong"), false);
-            // break;
-    }
+    oled_write_P(PSTR("Enc Mode: "), false);
+    oled_write_P(PSTR(encoder_mode_names[enc_mode]), false);
 }
 
 void render_normal_mode(void) {
