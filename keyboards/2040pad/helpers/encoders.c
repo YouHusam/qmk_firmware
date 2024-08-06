@@ -3,6 +3,11 @@
 
 void left_encoder_pressed(bool pressed) {
     switch (enc_mode) {
+        case DEFAULT:
+            if (pressed) {
+                tap_code(KC_NUM_LOCK);
+            }
+            break;
         case SCROLL:
             if (pressed) {
                 register_code(KC_MS_BTN3);
@@ -47,6 +52,11 @@ void left_encoder_pressed(bool pressed) {
 
 void right_encoder_pressed(bool pressed) {
     switch (enc_mode) {
+        case DEFAULT:
+            if (pressed) {
+                tap_code(KC_MUTE);
+            }
+            break;
         case SCROLL:
             if (pressed) {
                 register_code(KC_MS_BTN3);
@@ -102,6 +112,7 @@ void left_encoder_cw(void) {
         return;
     }
     switch (enc_mode) {
+        case DEFAULT:
         case SCROLL:
             tap_code(KC_MS_WH_UP);
             break;
@@ -142,6 +153,7 @@ void left_encoder_ccw(void) {
         return;
     }
     switch (enc_mode) {
+        case DEFAULT:
         case SCROLL:
             tap_code(KC_MS_WH_DOWN);
             break;
@@ -182,6 +194,9 @@ void right_encoder_cw(void) {
         return;
     }
     switch (enc_mode) {
+        case DEFAULT:
+            tap_code(KC_VOLD);
+            break;
         case SCROLL:
             tap_code(KC_MS_WH_LEFT);
             break;
@@ -218,6 +233,9 @@ void right_encoder_ccw(void) {
         return;
     }
     switch (enc_mode) {
+        case DEFAULT:
+            tap_code(KC_VOLU);
+            break;
         case SCROLL:
             tap_code(KC_MS_WH_RIGHT);
             break;
