@@ -8,6 +8,7 @@ enum custom_keycodes {
 };
 
 enum encoder_modes {
+    DEFAULT,
     SCROLL,
     MOUSE,
     TEXT,
@@ -18,6 +19,7 @@ enum encoder_modes {
 };
 
 const char* encoder_mode_names[] = {
+    "DEFAULT",
     "SCROLL",
     "MOUSE",
     "TEXT",
@@ -26,7 +28,7 @@ const char* encoder_mode_names[] = {
     // "PONG"
 };
 
-uint8_t enc_mode = SCROLL;
+uint8_t enc_mode = DEFAULT;
 
 enum display_modes {
     NORMAL,
