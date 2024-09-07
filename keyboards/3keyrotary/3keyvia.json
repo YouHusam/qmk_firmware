@@ -2,6 +2,9 @@
     "name": "3keyrotary",
     "vendorId": "0x6879",
     "productId": "0x0421",
+    "keycodes": [
+        "qmk_lighting"
+      ],
     "menus": [
         "qmk_rgb_matrix"
     ],

@@ -11,7 +11,9 @@
         "bootmagic": true,
         "extrakey": true,
         "rgb_matrix": true,
-        "encoder": true
+        "encoder": true,
+        "encoder_map": true,
+        "via": true
     },
     "processor": "RP2040",
     "bootloader": "rp2040",
@@ -95,5 +97,5 @@
             {"matrix": [0, 1], "x": 1, "y": 0, "flags": 4},
             {"matrix": [0, 0], "x": 0, "y": 0, "flags": 4}
         ]
-    },
+    }
 }
