@@ -20,12 +20,12 @@
     },
     "encoder": {
         "rotary": [
-            {"pin_a": "GP5", "pin_b": "GP4"}
+            {"pin_a": "GP4", "pin_b": "GP5"}
         ]
     },
     "matrix_pins": {
         "direct": [
-            ["GP0", "GP1", "GP2", "GP3"]
+            ["GP3", "GP2", "GP1", "GP0"]
         ]
     },
     "layouts": {
@@ -90,9 +90,10 @@
         },
         "driver": "ws2812",
         "layout": [
-            {"matrix": [0, 0], "x": 0, "y": 0, "flags": 4},
+            {"matrix": [0, 3], "x": 3, "y": 0, "flags": 4},
+            {"matrix": [0, 2], "x": 2, "y": 0, "flags": 4},
             {"matrix": [0, 1], "x": 1, "y": 0, "flags": 4},
-            {"matrix": [0, 2], "x": 2, "y": 0, "flags": 4}
+            {"matrix": [0, 0], "x": 0, "y": 0, "flags": 4}
         ]
     },
 }
