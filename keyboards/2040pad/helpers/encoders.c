@@ -36,7 +36,7 @@ void left_encoder_pressed(bool pressed) {
             break;
         case MEDIA:
             if (pressed) {
-                tap_code(KC_MUTE);
+                tap_code(KC_MPLY);
             }
             break;
             // case PONG:
@@ -87,7 +87,7 @@ void right_encoder_pressed(bool pressed) {
             break;
         case MEDIA:
             if (pressed) {
-                tap_code(KC_MPLY);
+                tap_code(KC_MUTE);
             }
             break;
         // case PONG:
@@ -137,7 +137,7 @@ void left_encoder_cw(void) {
             unregister_code(KC_LCTL);
             break;
         case MEDIA:
-            tap_code(KC_VOLD);
+            tap_code(KC_MPRV);
             break;
         // case PONG:
         // pong_input(player_left, clockwise);
@@ -174,7 +174,7 @@ void left_encoder_ccw(void) {
             unregister_code(KC_LCTL);
             break;
         case MEDIA:
-            tap_code(KC_VOLU);
+            tap_code(KC_MNXT);
             break;
         // case PONG:
         // pong_input(player_left, anticlockwise);
@@ -217,7 +217,7 @@ void right_encoder_cw(void) {
             unregister_code(KC_LCTL);
             break;
         case MEDIA:
-            tap_code(KC_MPRV);
+            tap_code(KC_VOLD);
             break;
         // case PONG:
         // pong_input(player_right, clockwise);
@@ -254,7 +254,7 @@ void right_encoder_ccw(void) {
             unregister_code(KC_LCTL);
             break;
         case MEDIA:
-            tap_code(KC_MNXT);
+            tap_code(KC_VOLU);
             break;
         // case PONG:
         // pong_input(player_right, anticlockwise);
