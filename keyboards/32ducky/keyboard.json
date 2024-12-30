@@ -4,8 +4,8 @@
     "manufacturer": "Ducky",
     "maintainer": "YouHusam",
     "usb": {
-        "vid": "0xFEED",
-        "pid": "0x1086",
+        "vid": "0x6879",
+        "pid": "0x0422",
         "device_version": "1.0.0",
         "force_nkro": true
     },
