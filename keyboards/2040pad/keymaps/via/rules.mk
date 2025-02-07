@@ -1,0 +1,2 @@
+ENCODER_MAP_ENABLE = no
+VIA_ENABLE = yes
