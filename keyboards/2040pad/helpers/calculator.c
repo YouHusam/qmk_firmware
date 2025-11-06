@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include "quantum.h"
 #include <stdint.h>
-#include "avr_f64.h"
+#include <stdio.h>
+#include <math.h>
 #include "helpers.c"
 
 /*
@@ -25,15 +26,14 @@ char              big_output[12]      = {'0', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 char              small_output[22]    = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\0'};
 int               operator            = empty;
 int               is_op               = false;  // flag to know if last action was an operator (excluding =)
-char *nullptr;
-float64_t small_value = 0;  // computed value in small area
-float64_t big_value   = 0;  // value currently being displayed
+double small_value = 0.0;  // computed value in small area
+double big_value   = 0.0;  // value currently being displayed
 struct RightValue {
-    float64_t content; //value of RightValue
+    double content; //value of RightValue
     char   str[12]; // string representation of the value
     int    validity; // whether or not it should be considered for condition check
 };
-struct RightValue right_value = {0, "", 0};
+struct RightValue right_value = {0.0, "", 0};
 
 /*
  * Function:  get_length
@@ -245,40 +245,168 @@ void remove_decimals(char *c) {
 }
 
 /*
+ * Function:  format_double_to_buffer
+ * --------------------
+ * Formats a double value into the big_output buffer
+ * Manual formatting to avoid snprintf issues with floats
+ */
+void format_double_to_buffer(double value) {
+    char temp[20];
+    int len;
+
+    // Handle special cases
+    if (isnan(value)) {
+        strcpy(big_output, "NaN");
+        len = 3;
+        for (int i = len; i < MAX_BIG; i++) big_output[i] = ' ';
+        big_output[MAX_BIG] = '\0';
+        return;
+    }
+    if (isinf(value)) {
+        if (value > 0) {
+            strcpy(big_output, "Inf");
+        } else {
+            strcpy(big_output, "-Inf");
+        }
+        len = strlen(big_output);
+        for (int i = len; i < MAX_BIG; i++) big_output[i] = ' ';
+        big_output[MAX_BIG] = '\0';
+        return;
+    }
+
+    // Use sprintf with integer conversion for better compatibility
+    double abs_val = fabs(value);
+
+    // Scientific notation for very large/small numbers
+    if (abs_val >= 1e9 || (abs_val < 0.001 && abs_val != 0.0)) {
+        // Manual scientific notation formatting
+        int exponent = 0;
+        double mantissa = value;
+
+        if (abs_val >= 10.0) {
+            while (fabs(mantissa) >= 10.0) {
+                mantissa /= 10.0;
+                exponent++;
+            }
+        } else if (abs_val < 1.0 && abs_val > 0.0) {
+            while (fabs(mantissa) < 1.0) {
+                mantissa *= 10.0;
+                exponent--;
+            }
+        }
+
+        // Format: mantissa E exponent
+        int int_part = (int)mantissa;
+        int frac_part = (int)((fabs(mantissa) - fabs((double)int_part)) * 100);
+
+        if (exponent >= 0) {
+            sprintf(temp, "%d.%02dE+%d", int_part, frac_part, exponent);
+        } else {
+            sprintf(temp, "%d.%02dE%d", int_part, frac_part, exponent);
+        }
+    } else {
+        // Regular number - convert to integer representation
+        // Round to 6 decimal places to avoid floating point precision issues
+        double rounded_value = round(value * 1000000.0) / 1000000.0;
+
+        // Check if it's essentially an integer
+        double int_check = rounded_value - (long)rounded_value;
+
+        if (fabs(int_check) < 0.000001) {
+            // It's an integer or very close to it
+            sprintf(temp, "%ld", (long)rounded_value);
+        } else {
+            // Has decimal part - use integer arithmetic to avoid %f
+            int negative = (rounded_value < 0) ? 1 : 0;
+            long int_part = (long)fabs(rounded_value);
+            long frac_part = (long)round((fabs(rounded_value) - int_part) * 1000000);
+
+            if (negative) {
+                sprintf(temp, "-%ld", int_part);
+            } else {
+                sprintf(temp, "%ld", int_part);
+            }
+
+            len = strlen(temp);
+
+            // Add decimal part if there's room and it's non-zero
+            if (frac_part > 0 && len < MAX_BIG - 2) {
+                temp[len++] = '.';
+
+                // Add up to 6 decimal places, trimming trailing zeros
+                char dec_str[7];
+                sprintf(dec_str, "%06ld", frac_part);
+
+                // Trim trailing zeros
+                int dec_len = 6;
+                while (dec_len > 1 && dec_str[dec_len - 1] == '0') {
+                    dec_len--;
+                }
+
+                // Copy what fits
+                for (int i = 0; i < dec_len && len < MAX_BIG; i++) {
+                    temp[len++] = dec_str[i];
+                }
+                temp[len] = '\0';
+            }
+        }
+    }    // Truncate if too long
+    len = strlen(temp);
+    if (len > MAX_BIG) {
+        len = MAX_BIG;
+    }
+
+    // Copy to big_output and pad with spaces
+    memcpy(big_output, temp, len);
+    for (int i = len; i < MAX_BIG; i++) {
+        big_output[i] = ' ';
+    }
+    big_output[MAX_BIG] = '\0';
+}
+
+/*
+ * Function:  parse_big_output_to_double
+ * --------------------
+ * Converts the big_output string to a double value
+ */
+double parse_big_output_to_double(void) {
+    char temp[12];
+    int len = get_length(big_output);
+
+    if (len == 0) return 0.0;
+
+    // Copy only the numeric part (no trailing spaces)
+    memcpy(temp, big_output, len);
+    temp[len] = '\0';
+
+    return strtod(temp, NULL);
+}
+
+/*
  * Function:  perform_operation
  * --------------------
- * Calls the function from avr_f64 to perform the operation with double precision
- * If the result of the operation is NaN set the current_index_big to -1 to force a reset
+ * Performs arithmetic operations using standard C double
  */
-void perform_operation(int op, float64_t v1, float64_t v2) {
-    char* string ;
+void perform_operation(int op, double v1, double v2) {
     if (op == add) {
-        small_value = f_add(v1, v2);
-        big_value   = small_value;
-        string = f_to_string(big_value, MAX_BIG-1, 2);
-        memcpy(big_output, string, sizeof(big_output));
+        small_value = v1 + v2;
     } else if (op == subtract) {
-        small_value = f_sub(v1, v2);
-        big_value   = small_value;
-        string = f_to_string(big_value, MAX_BIG-1, 2);
-        memcpy(big_output, string, sizeof(big_output));
+        small_value = v1 - v2;
     } else if (op == multiply) {
-        small_value = f_mult(v1, v2);
-        big_value   = small_value;
-        string = f_to_string(big_value, MAX_BIG-1, 2);
-        memcpy(big_output, string, sizeof(big_output));
+        small_value = v1 * v2;
     } else if (op == divide) {
-		small_value = f_div(v1, v2);
-		big_value   = small_value;
-		string = f_to_string(big_value, MAX_BIG-1, 2);
-		memcpy(big_output, string, sizeof(big_output));
-    } else if (op == enter) {
-        // oh shit..
+        small_value = v1 / v2;
+    } else {
+        return;  // Unknown operation
     }
-	current_index_big = 0;
-	if (big_value == float64_ONE_POSSIBLE_NAN_REPRESENTATION){
-		current_index_big = -1;
-	}
+
+    big_value = small_value;
+    format_double_to_buffer(big_value);
+    current_index_big = get_length(big_output);
+
+    if (isnan(big_value) || isinf(big_value)) {
+        current_index_big = -1;
+    }
     return;
 }
 
@@ -317,7 +445,7 @@ char *get_operator_sign(int op) {
  */
 void perform_enter(void) {
     if (has_dot) remove_decimals(big_output);
-    big_value           = f_strtod(big_output, &nullptr);
+    big_value           = parse_big_output_to_double();
     right_value.content = big_value;
     memcpy(right_value.str, big_output, sizeof(big_output));
     right_value.validity = 1;
@@ -327,6 +455,7 @@ void perform_enter(void) {
     current_index_small = 0;
     has_dot             = false;
     perform_operation(operator, small_value, big_value);
+    operator = enter;  // Set operator to enter so we know we just finished a calculation
     return;
 }
 
@@ -342,12 +471,30 @@ void process_operator(int op) {
     if (current_index_big < 0) {
         return;
     }
+
+    // If the last operation was enter (=), treat this as starting a new calculation
+    // with the result as the first operand
+    if (operator == enter && !is_op) {
+        operator = op;
+        if (has_dot) remove_decimals(big_output);
+        big_value   = parse_big_output_to_double();
+        small_value = big_value;
+        strcpy(small_output, big_output);
+        current_index_small = get_length(big_output);
+        append_to_small_output(get_operator_sign(op));
+        right_value.validity = 0;
+        current_index_big    = 0;
+        has_dot              = false;
+        is_op                = true;
+        return;
+    }
+
 	// if no is no previous operator takes the big value and puts into the small value
 	// and append the operator at the end while storing its value
     if (operator == empty) {
         operator = op;
         if (has_dot) remove_decimals(big_output);
-        big_value   = f_strtod(big_output, &nullptr);
+        big_value   = parse_big_output_to_double();
         small_value = big_value;
         strcpy(small_output, big_output);
         current_index_small = get_length(big_output);
@@ -395,7 +542,7 @@ void process_operator(int op) {
                 perform_enter();
             } else {
                 if (has_dot) remove_decimals(big_output);
-                big_value = f_strtod(big_output, &nullptr);
+                big_value = parse_big_output_to_double();
                 right_value.validity = 0;
                 append_to_small_output(big_output);
                 append_to_small_output(get_operator_sign(op));
@@ -409,7 +556,7 @@ void process_operator(int op) {
     return;
 }
 
-void set_small_value(void) { small_value = f_strtod(big_output, NULL); }
+void set_small_value(void) { small_value = parse_big_output_to_double(); }
 
 /*
  * Function:  process_value
@@ -421,9 +568,29 @@ void set_small_value(void) { small_value = f_strtod(big_output, NULL); }
  * 	else do nothing
  */
 void process_value(char value) {
-    if (operator == enter){
+    // If we just finished a calculation (operator is enter), start completely fresh
+    if (operator == enter) {
+        oled_clear();  // Clear the display
         current_index_small = 0;
+        memcpy(small_output, reset_small, sizeof(reset_small));
+        memcpy(big_output, reset_big, sizeof(reset_big));
+        current_index_big = 0;
+        has_dot = false;
+        operator = empty;
+        small_value = 0.0;
+        big_value = 0.0;
+        right_value.validity = 0;
     }
+
+    // If we just pressed an operator (is_op is true), clear only big_output for new number
+    // but keep the operation intact
+    if (is_op) {
+        memcpy(big_output, reset_big, sizeof(reset_big));
+        current_index_big = 0;
+        has_dot = false;
+        is_op = false;
+    }
+
     if (value == '0') {
         if (current_index_big < 10) {
             if (current_index_big <= 0) {
@@ -436,14 +603,9 @@ void process_value(char value) {
     } else {
         // if there is still room
         if ((current_index_big < 10) && (current_index_big >= 0)) {
-            is_op = false;
             if ((current_index_big == 1) && (big_output[0] == '0')) {
                 big_output[0] = value;
             } else {
-                if (current_index_small == 0) {
-                    memcpy(small_output, reset_small, sizeof(reset_small));
-                    operator = empty;
-                }
                 if (current_index_big == 0) {
                     memcpy(big_output, reset_big, sizeof(reset_big));
                 }
@@ -468,18 +630,39 @@ void process_value(char value) {
  *
  */
 void process_dot(void) {
+    // If we just finished a calculation (operator is enter), start completely fresh
+    if (operator == enter) {
+        oled_clear();  // Clear the display
+        current_index_small = 0;
+        memcpy(small_output, reset_small, sizeof(reset_small));
+        memcpy(big_output, reset_big, sizeof(reset_big));
+        current_index_big = 0;
+        has_dot = false;
+        operator = empty;
+        small_value = 0.0;
+        big_value = 0.0;
+        right_value.validity = 0;
+    }
+
+    // If we just pressed an operator (is_op is true), clear only big_output for new number
+    // but keep the operation intact
+    if (is_op) {
+        memcpy(big_output, reset_big, sizeof(reset_big));
+        current_index_big = 0;
+        has_dot = false;
+        is_op = false;
+    }
+
     if (!has_dot) {
         if ((current_index_big < 11) && (current_index_big > 0)) {
             big_output[current_index_big] = '.';
             current_index_big++;
-            is_op   = false;
             has_dot = true;
         } else if (current_index_big < 11) {
             big_output[current_index_big] = '0';
             current_index_big++;
             big_output[current_index_big] = '.';
             current_index_big++;
-            is_op   = false;
             has_dot = true;
         } else {
             // do nothing

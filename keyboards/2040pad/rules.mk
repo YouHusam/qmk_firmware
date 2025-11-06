@@ -3,4 +3,3 @@ OLED_DRIVER_ENABLE = yes
 LTO_ENABLE = yes
 ENCODER_MAP_ENABLE = yes
 LOCAL_GLCDFONT = yes
-SRC += helpers/avr_f64.c
