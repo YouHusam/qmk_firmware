@@ -112,10 +112,21 @@ void left_encoder_cw(void) {
         }
         return;
     }
+    uint8_t current_layer = get_highest_layer(layer_state);
     switch (enc_mode) {
         case DEFAULT:
         case BRIGHTNESS:
-            tap_code(KC_F14);
+            if (current_layer == 1) {
+                register_code(KC_LCTL);
+                tap_code(KC_F14);
+                unregister_code(KC_LCTL);
+            } else if (current_layer == 2) {
+                register_code(KC_LSFT);
+                tap_code(KC_F14);
+                unregister_code(KC_LSFT);
+            } else {
+                tap_code(KC_F14);
+            }
             break;
         case MOUSE:
             tap_code(MS_WHLU);
@@ -153,10 +164,21 @@ void left_encoder_ccw(void) {
         enc_mode = (enc_mode + 1) % ENCODER_MODES_COUNT;
         return;
     }
+    uint8_t current_layer = get_highest_layer(layer_state);
     switch (enc_mode) {
         case DEFAULT:
         case BRIGHTNESS:
-            tap_code(KC_F15);
+            if (current_layer == 1) {
+                register_code(KC_LCTL);
+                tap_code(KC_F15);
+                unregister_code(KC_LCTL);
+            } else if (current_layer == 2) {
+                register_code(KC_LSFT);
+                tap_code(KC_F15);
+                unregister_code(KC_LSFT);
+            } else {
+                tap_code(KC_F15);
+            }
             break;
         case MOUSE:
             tap_code(MS_DOWN);
@@ -194,14 +216,29 @@ void right_encoder_cw(void) {
         }
         return;
     }
+    uint8_t current_layer = get_highest_layer(layer_state);
     switch (enc_mode) {
         case DEFAULT:
             tap_code(KC_VOLD);
             break;
         case BRIGHTNESS:
-            register_code(KC_LCTL);
-            tap_code(KC_F14);
-            unregister_code(KC_LCTL);
+            if (current_layer == 1) {
+                register_code(KC_LCTL);
+                register_code(KC_LCTL);
+                tap_code(KC_F14);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LCTL);
+            } else if (current_layer == 2) {
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                tap_code(KC_F14);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+            } else {
+                register_code(KC_LCTL);
+                tap_code(KC_F14);
+                unregister_code(KC_LCTL);
+            }
             break;
         case MOUSE:
             tap_code(MS_LEFT);
@@ -235,14 +272,29 @@ void right_encoder_ccw(void) {
         display_mode_selector = (display_mode_selector + 1) % ENCODER_SELECT;
         return;
     }
+    uint8_t current_layer = get_highest_layer(layer_state);
     switch (enc_mode) {
         case DEFAULT:
             tap_code(KC_VOLU);
             break;
         case BRIGHTNESS:
-            register_code(KC_LCTL);
-            tap_code(KC_F15);
-            unregister_code(KC_LCTL);
+            if (current_layer == 1) {
+                register_code(KC_LCTL);
+                register_code(KC_LCTL);
+                tap_code(KC_F15);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LCTL);
+            } else if (current_layer == 2) {
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                tap_code(KC_F15);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+            } else {
+                register_code(KC_LCTL);
+                tap_code(KC_F15);
+                unregister_code(KC_LCTL);
+            }
             break;
         case MOUSE:
             tap_code(MS_RGHT);
