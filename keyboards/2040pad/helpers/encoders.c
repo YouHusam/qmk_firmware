@@ -1,3 +1,4 @@
+#include "keycodes.h"
 #include QMK_KEYBOARD_H
 #include "helpers.c"
 
@@ -10,16 +11,16 @@ void left_encoder_pressed(bool pressed) {
             break;
         case SCROLL:
             if (pressed) {
-                register_code(KC_MS_BTN3);
+                register_code(MS_BTN3);
             } else {
-                unregister_code(KC_MS_BTN3);
+                unregister_code(MS_BTN3);
             }
             break;
         case MOUSE:
             if (pressed) {
-                register_code(KC_MS_BTN1);
+                register_code(MS_BTN1);
             } else {
-                unregister_code(KC_MS_BTN1);
+                unregister_code(MS_BTN1);
             }
             break;
         case TEXT:
@@ -59,16 +60,16 @@ void right_encoder_pressed(bool pressed) {
             break;
         case SCROLL:
             if (pressed) {
-                register_code(KC_MS_BTN3);
+                register_code(MS_BTN3);
             } else {
-                unregister_code(KC_MS_BTN3);
+                unregister_code(MS_BTN3);
             }
             break;
         case MOUSE:
             if (pressed) {
-                register_code(KC_MS_BTN2);
+                register_code(MS_BTN2);
             } else {
-                unregister_code(KC_MS_BTN2);
+                unregister_code(MS_BTN2);
             }
             break;
         case TEXT:
@@ -114,10 +115,10 @@ void left_encoder_cw(void) {
     switch (enc_mode) {
         case DEFAULT:
         case SCROLL:
-            tap_code(KC_MS_WH_UP);
+            tap_code(MS_WHLU);
             break;
         case MOUSE:
-            tap_code(KC_MS_UP);
+            tap_code(MS_WHLU);
             break;
         case TEXT:
             register_code(KC_LCTL);
@@ -155,10 +156,10 @@ void left_encoder_ccw(void) {
     switch (enc_mode) {
         case DEFAULT:
         case SCROLL:
-            tap_code(KC_MS_WH_DOWN);
+            tap_code(MS_WHLD);
             break;
         case MOUSE:
-            tap_code(KC_MS_DOWN);
+            tap_code(MS_DOWN);
             break;
         case TEXT:
             register_code(KC_LCTL);
@@ -198,10 +199,10 @@ void right_encoder_cw(void) {
             tap_code(KC_VOLD);
             break;
         case SCROLL:
-            tap_code(KC_MS_WH_LEFT);
+            tap_code(MS_WHLL);
             break;
         case MOUSE:
-            tap_code(KC_MS_LEFT);
+            tap_code(MS_LEFT);
             break;
         case TEXT:
             register_code(KC_LCTL);
@@ -237,10 +238,10 @@ void right_encoder_ccw(void) {
             tap_code(KC_VOLU);
             break;
         case SCROLL:
-            tap_code(KC_MS_WH_RIGHT);
+            tap_code(MS_WHLR);
             break;
         case MOUSE:
-            tap_code(KC_MS_RIGHT);
+            tap_code(MS_RGHT);
             break;
         case TEXT:
             register_code(KC_LCTL);
