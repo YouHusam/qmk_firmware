@@ -9,7 +9,7 @@ enum custom_keycodes {
 
 enum encoder_modes {
     DEFAULT,
-    SCROLL,
+    BRIGHTNESS,
     MOUSE,
     TEXT,
     APPSW,
@@ -20,7 +20,7 @@ enum encoder_modes {
 
 const char* encoder_mode_names[] = {
     "DEFAULT",
-    "SCROLL",
+    "BRIGHTNESS",
     "MOUSE",
     "TEXT",
     "APPSW",

@@ -9,7 +9,7 @@ void left_encoder_pressed(bool pressed) {
                 tap_code(KC_NUM_LOCK);
             }
             break;
-        case SCROLL:
+        case BRIGHTNESS:
             if (pressed) {
                 register_code(MS_BTN3);
             } else {
@@ -58,7 +58,7 @@ void right_encoder_pressed(bool pressed) {
                 tap_code(KC_MUTE);
             }
             break;
-        case SCROLL:
+        case BRIGHTNESS:
             if (pressed) {
                 register_code(MS_BTN3);
             } else {
@@ -114,8 +114,8 @@ void left_encoder_cw(void) {
     }
     switch (enc_mode) {
         case DEFAULT:
-        case SCROLL:
-            tap_code(MS_WHLU);
+        case BRIGHTNESS:
+            tap_code(KC_F14);
             break;
         case MOUSE:
             tap_code(MS_WHLU);
@@ -155,8 +155,8 @@ void left_encoder_ccw(void) {
     }
     switch (enc_mode) {
         case DEFAULT:
-        case SCROLL:
-            tap_code(MS_WHLD);
+        case BRIGHTNESS:
+            tap_code(KC_F15);
             break;
         case MOUSE:
             tap_code(MS_DOWN);
@@ -198,8 +198,10 @@ void right_encoder_cw(void) {
         case DEFAULT:
             tap_code(KC_VOLD);
             break;
-        case SCROLL:
-            tap_code(MS_WHLL);
+        case BRIGHTNESS:
+            register_code(KC_LCTL);
+            tap_code(KC_F14);
+            unregister_code(KC_LCTL);
             break;
         case MOUSE:
             tap_code(MS_LEFT);
@@ -237,8 +239,10 @@ void right_encoder_ccw(void) {
         case DEFAULT:
             tap_code(KC_VOLU);
             break;
-        case SCROLL:
-            tap_code(MS_WHLR);
+        case BRIGHTNESS:
+            register_code(KC_LCTL);
+            tap_code(KC_F15);
+            unregister_code(KC_LCTL);
             break;
         case MOUSE:
             tap_code(MS_RGHT);
