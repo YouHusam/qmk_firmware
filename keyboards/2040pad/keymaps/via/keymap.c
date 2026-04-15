@@ -21,28 +21,28 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        LT(1, LENC),   LT(2, RENC),
+        KC_MEDIA_PREV_TRACK,   KC_MEDIA_NEXT_TRACK, LT(1, LENC),   LT(2, RENC),
         KC_KP_7,   KC_KP_8,   KC_KP_9,   KC_KP_SLASH,
         KC_KP_4,   KC_KP_5,   KC_KP_6,   KC_KP_ASTERISK,
         KC_KP_1,   KC_KP_2,   KC_KP_3,   KC_KP_MINUS,
         KC_KP_0,   KC_KP_DOT,  KC_KP_PLUS,   KC_KP_ENTER
     ),
     [1] = LAYOUT(
-        LT(3, LENC),   MODE_SELECT,
+        _______,   _______, LT(3, LENC),   MODE_SELECT,
         QK_BOOT,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______
     ),
     [2] = LAYOUT(
-        MODE_SELECT,   LT(3, RENC),
+        _______,   _______, MODE_SELECT,   LT(3, RENC),
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         QK_CLEAR_EEPROM,   _______,   _______,   _______
     ),
     [3] = LAYOUT(
-        LENC,   RENC,
+        _______,   _______, LENC,   RENC,
         MODE_SELECT,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
