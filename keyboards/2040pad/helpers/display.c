@@ -72,7 +72,7 @@ void render_encoder_select_mode(void) {
 bool oled_task_user(void) {
     static uint8_t previous_display_mode = NORMAL;
 
-    if (timer_elapsed(timer) < 1000) {
+    if (timer_elapsed(timer) < 3000) {
         return false;
     }
 
@@ -102,6 +102,7 @@ bool oled_task_user(void) {
 }
 
 void keyboard_post_init_user(void) {
+    setPinInputHigh(GP9);
     render_qmk_logo();
 }
 

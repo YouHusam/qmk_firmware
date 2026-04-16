@@ -22,38 +22,45 @@
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
         KC_MEDIA_PREV_TRACK,   KC_MEDIA_NEXT_TRACK, LT(1, LENC),   LT(2, RENC),
+        MS_BTN1,
         KC_KP_7,   KC_KP_8,   KC_KP_9,   KC_KP_SLASH,
         KC_KP_4,   KC_KP_5,   KC_KP_6,   KC_KP_ASTERISK,
         KC_KP_1,   KC_KP_2,   KC_KP_3,   KC_KP_MINUS,
         KC_KP_0,   KC_KP_DOT,  KC_KP_PLUS,   KC_KP_ENTER
+
     ),
     [1] = LAYOUT(
-        _______,   _______, LT(3, LENC),   MODE_SELECT,
-        QK_BOOT,   _______,   _______,   _______,
+        QK_BOOT,   _______, LT(3, LENC),   MODE_SELECT,
+        _______,
+        _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______
+
     ),
     [2] = LAYOUT(
         _______,   _______, MODE_SELECT,   LT(3, RENC),
+        _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
         QK_CLEAR_EEPROM,   _______,   _______,   _______
+
     ),
     [3] = LAYOUT(
-        _______,   _______, LENC,   RENC,
-        MODE_SELECT,   _______,   _______,   _______,
+        MODE_SELECT,   _______, LENC,   RENC,
+        _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
-        QK_CLEAR_EEPROM ,   _______,   _______,   _______
+        _______,   _______,   _______,   _______,
+        QK_CLEAR_EEPROM,   _______,   _______,   _______
     ),
 };
 
 
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] = { ENCODER_CCW_CW(KC_WH_D, KC_WH_U), ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
+    [0] = { ENCODER_CCW_CW(MS_WHLD, MS_WHLU), ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
     [1] = { ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______) },
     [2] = { ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______) },
     [3] = { ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______) },
