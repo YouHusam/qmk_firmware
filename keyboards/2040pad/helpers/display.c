@@ -102,7 +102,6 @@ bool oled_task_user(void) {
 }
 
 void keyboard_post_init_user(void) {
-    setPinInputHigh(GP9);
     render_qmk_logo();
 }
 
