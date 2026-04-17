@@ -30,7 +30,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     ),
     [1] = LAYOUT(
-        QK_BOOT,   _______, LT(3, LENC),   MODE_SELECT,
+        QK_BOOT,   QK_RBT, LT(3, LENC),   MODE_SELECT,
         _______,
         _______,   _______,   _______,   _______,
         _______,   _______,   _______,   _______,
